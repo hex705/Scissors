@@ -1,0 +1,178 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1138\cocoasubrtf320
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;\red46\green111\blue253;\red255\green83\blue8;\red221\green32\blue103;
+}
+\margl1440\margr1440\vieww10800\viewh8400\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+
+\f0\b\fs24 \cf0 Puree ReadMe
+\b0 \
+\
+Puree is a simple Hardware Serial parsing library for Arduino.\
+\
+As of August 2012, Puree is an alpha release.  It is tested and appears stable.  Please report bugs here:\
+\
+{\field{\*\fldinst{HYPERLINK "https://github.com/hex705/Puree/issues"}}{\fldrslt 
+\b https://github.com/hex705/Puree/issues}}
+\b \
+
+\b0 \
+\
+
+\b Download:
+\b0 \
+Obtain archive (.zip) from   \
+\
+		https://github.com/hex705/Puree\
+\
+Unzip and copy folder (OSX) into:   ~/Documents/Arduino/libraries\
+\
+Folder contains library, and examples.\
+\
+\
+
+\b Usage:\
+\
+
+\b0 \
+Puree expects structured messages with packages of the following form (spaces for clarity ONLY - do not include in your package):\
+\
+START_BYTE dataZero DELIMITER dataOne DELIMITER dataTwo DELIMITER END_BYTE\
+\
+Assuming default of : START_BYTE = '*',  END_BYTE = '#",  DELIMITER =','\
+\
+*dataZero,dataOne,dataTwo,#\
+\
+(Yes, I know that a delimiter and an END_BYTE side-by-side looks odd -- but it simplifies).\
+\
+The example package has three data points indexed 0-2 (like an array).\
+\
+Data points can be any combination of  int, float or String.  By default max number of data points in a single message is 8.  The can be reset with:\
+\
+int setMaxElements( int ) ;\
+\
+\
+
+\b Puree object
+\b0  must be declared at the  top of sketch:\
+\
+Puree 
+\b \cf2 puree
+\b0 \cf0 ;\
+\pard\tx566\tx980\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+\cf0 \
+\
+.
+\b begin()
+\b0  function must be called within  
+\b \cf3 setup()
+\b0 \cf0  :\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+\cf0 \
+\cf3 void setup() \cf0 \{\
+\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+
+\b \cf2 	puree
+\b0 \cf0 .
+\b begin()
+\b0 ;  // will instantiate with defaults\
+\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+\cf0 \}\
+\
+
+\b Alternate constructors:
+\b0 \
+\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+
+\b \cf2 	puree
+\b0 \cf0 .
+\b begin( int )
+\b0 ;  // set baud\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+\cf0 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+
+\b \cf2 	puree.\cf0 begin( int, char, char, char )
+\b0 ; // baud, startByte, endByte, delimiter\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+\cf0 \
+
+\b Defaults:
+\b0 \
+\
+BAUD: 19200\
+START_BYTE =  '*' \
+END_BYTE     =  '#'\
+DELIMITER    =   ','\
+\
+Debugging with serial communication is possible once 
+\b .begin()
+\b0  is called.\
+\
+
+\b Data Stream:\
+\
+\
+
+\b0 Data is retrieved from the buffer within 
+\b \cf3 loop()
+\b0 \cf0  with a call to:
+\b \
+\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+\cf2 puree.\cf0 update();\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+\cf0 \
+
+\b0 Returns the number (int) of data points found in current package.
+\b \
+\
+
+\b0 \
+
+\b Extracting Data Points
+\b0 \
+\
+Incoming serial data is stored in a string buffer that is automatically parsed at delimiters upon receipt.  Individual values can be obtained by by calling the following get functions:\
+\
+int       
+\b \cf2 puree.\cf0 getInt( index )
+\b0 ;\
+float    
+\b \cf2 puree.\cf0 getFloat (index)
+\b0 ;\
+String 
+\b \cf2 puree.\cf0 getString (index )
+\b0 ;\
+\
+where index = data position in original data package (zero indexed)\
+\
+
+\b RAW Data\
+
+\b0 \
+You can retrieve the whole data stream with:\
+\
+String  
+\b \cf2 puree\cf0 .getRaw();
+\b0 \
+\
+\
+\
+\
+
+\b \cf4 TO DO:
+\b0 \cf0 \
+\
+ -- Further Examples\
+ -- tie to Stream not serial -- enabling use with Ethernet Shield\
+		Note: this will change the instantiation.\
+\
+ -- full documentation to be developed.\
+\
+\
+\
+}
