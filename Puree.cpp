@@ -242,6 +242,26 @@ int Puree::setMaxElements( int m ) {
 }
 
 
+char Puree::getStartByte( ) {
+   return START_BYTE;
+}
+
+
+char Puree::getEndByte( ) {
+   return END_BYTE;
+}
+
+
+char Puree::getDelimiter( ) {
+   return DELIMITER;
+}
+
+
+int Puree::getMaxElements(  ) { 
+	return 	MAX_ELEMENTS ; 
+}
+
+
 
 
 

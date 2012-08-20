@@ -48,8 +48,12 @@ public:
 	int setDelimiter( char );
 	int setMaxElements( int ) ;
 		
+	// getters
+	char getStartByte   ( );
+	char getEndByte     ( );
+	char getDelimiter   ( );
+	int  getMaxElements ( ); 
 
-	
 private:
 	
 	// internal vars & parsing variables
