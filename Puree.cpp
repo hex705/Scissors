@@ -14,7 +14,7 @@
 
 #include <Puree.h>
 #include <WString.h> // String
-#include <HardwareSerial.h>
+// #include <HardwareSerial.h>
 
 
 void Puree::begin()

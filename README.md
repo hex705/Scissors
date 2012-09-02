@@ -18,7 +18,7 @@ Quick Start
 
 4. Start pureeing data streams.
 
-Dowloaded folder contains library, and examples.
+Downloaded folder contains library, and examples.
 
 
 Usage
