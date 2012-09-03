@@ -1,4 +1,4 @@
-Puree	        KEYWORD1
+Scissors       KEYWORD1
 
 begin	        KEYWORD2
 update	        KEYWORD2

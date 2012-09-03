@@ -1,24 +1,24 @@
 
-// Puree v0.01
-// Puree Example:  mouseBlink (v1)
+// Scissors v0.01
+// Scissors Example:  mouseBlink (v1)
 
-// mouseBlink uses Puree to parse messages from a Processing sketch (below) 
+// mouseBlink uses Scissors to parse messages from a Processing sketch (below) 
 // and uses data to control blink rate of LED on pin13
 
-// Puree and this Example by hex705 (Steve Daniels)
+// Scissors and this Example by hex705 (Steve Daniels)
 // August 2012, All Rights Reserved.
 
-// Puree and similar Libraries can be found at:
+// Scissors and similar Libraries can be found at:
 // https://github.com/hex705
 
 
-#include <Puree.h>
+#include <Scissors.h>
 
-Puree p;
+Scissors cut;
 
 void setup() {
   
-  p.begin();
+  cut.begin();
   pinMode(13,OUTPUT);
   
 }
@@ -26,10 +26,10 @@ void setup() {
 
 void loop() {
   
-  if (p.update() > 0) { // have a new message
+  if (cut.update() > 0) { // have a new message
       
-        int on = p.getInt(0);
-        int off= p.getInt(1);
+        int on = cut.getInt(0);
+        int off= cut.getInt(1);
         
         blink(on,off);     
   }
@@ -61,16 +61,16 @@ void blink (int onTime, int offTime) {
 
 
 
-//// Puree v0.01
-//// Puree Example:  Prcessing Sketch for mouseBlink (v1)
+//// Scissors v0.01
+//// Scissors Example:  Prcessing Sketch for mouseBlink (v1)
 //
-//// mouseBlink uses Puree to parse messages from this Processing sketch 
+//// mouseBlink uses Scissors to parse messages from this Processing sketch 
 //// and uses data to control blink rate of LED on pin13
 //
-//// Puree and this Example by hex705 (Steve Daniels)
+//// Scissors and this Example by hex705 (Steve Daniels)
 //// August 2012, All Rights Reserved.
 //
-//// Puree and similar Libraries can be followed at:
+//// Scissors and similar Libraries can be followed at:
 //// https://github.com/hex705
 //
 //

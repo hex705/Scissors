@@ -1,5 +1,5 @@
 //
-//  Puree.cpp
+//  Scissors.cpp
 //  
 //
 //  Created by steve daniels on 12-08-19.
@@ -12,28 +12,28 @@
 #include "WProgram.h"
 #endif
 
-#include <Puree.h>
+#include <Scissors.h>
 #include <WString.h> // String
-// #include <HardwareSerial.h>
+// Scissors#include <HardwareSerial.h>
 
 
-void Puree::begin()
+void Scissors::begin()
 {
-	Puree::init( 19200, '*', '#', ',' ); // default setup
+	Scissors::init( 19200, '*', '#', ',' ); // default setup
 }
 
-void Puree::begin( int _baud )
+void Scissors::begin( int _baud )
 {
-	Puree::init( _baud, '*', '#', ',' ); // specified baud, default parse parameters
+	Scissors::init( _baud, '*', '#', ',' ); // specified baud, default parse parameters
 }
 
-void Puree::begin( int _baud, char _start_byte, char _end_byte, char _delimiter )
+void Scissors::begin( int _baud, char _start_byte, char _end_byte, char _delimiter )
 {
-	Puree::init( _baud,  _start_byte,  _end_byte,  _delimiter); // user specifies all terms
+	Scissors::init( _baud,  _start_byte,  _end_byte,  _delimiter); // user specifies all terms
 }
 
 
-void Puree::init( int _baud, char _start_byte, char _end_byte, char _delimiter)
+void Scissors::init( int _baud, char _start_byte, char _end_byte, char _delimiter)
 {
 	
 	
@@ -57,7 +57,7 @@ void Puree::init( int _baud, char _start_byte, char _end_byte, char _delimiter)
 	
 }
 
-int Puree::update() {
+int Scissors::update() {
   
   int state = 0;
  
@@ -114,7 +114,7 @@ int Puree::update() {
 }
 
 
-int Puree::findDelimiters() {
+int Scissors::findDelimiters() {
   
     // delims array stores locations of DELIMITERS -- there 
           elementCount = 0;
@@ -140,7 +140,7 @@ int Puree::findDelimiters() {
 }  // end parser
 
 
-String Puree::getElement ( int whichOne ){  // not called directly by user
+String Scissors::getElement ( int whichOne ){  // not called directly by user
 
   sub ="";
   if ( (whichOne >= 0) && (whichOne <= elementCount) ) 
@@ -178,7 +178,7 @@ String Puree::getElement ( int whichOne ){  // not called directly by user
 
 
 
-int Puree::getInt ( int whichOne ){
+int Scissors::getInt ( int whichOne ){
   
   String elementString = getElement(whichOne);
   
@@ -191,7 +191,7 @@ int Puree::getInt ( int whichOne ){
 
 
 
-float Puree::getFloat( int whichOne) {
+float Scissors::getFloat( int whichOne) {
   
   String elementString = getElement(whichOne);
   
@@ -204,60 +204,60 @@ float Puree::getFloat( int whichOne) {
 
 
 
-String Puree::getString (int whichOne) {
+String Scissors::getString (int whichOne) {
   return getElement(whichOne);
 }
 
 
-String Puree::getRaw() {
+String Scissors::getRaw() {
    return messageBuffer; 
 }
 
 
 
 
-int Puree::setStartByte(char s) {
+int Scissors::setStartByte(char s) {
   START_BYTE = s;
   return 1;
 }
 
 
-int Puree::setEndByte(char e) {
+int Scissors::setEndByte(char e) {
   END_BYTE = e;
   return 1;
   
 }
 
 
-int Puree::setDelimiter(char d) {
+int Scissors::setDelimiter(char d) {
   DELIMITER = d;
   return 1;
   
 }
 
-int Puree::setMaxElements( int m ) {
+int Scissors::setMaxElements( int m ) {
 	MAX_ELEMENTS = m;
 	delims[MAX_ELEMENTS+1];    
 	return 1; 
 }
 
 
-char Puree::getStartByte( ) {
+char Scissors::getStartByte( ) {
    return START_BYTE;
 }
 
 
-char Puree::getEndByte( ) {
+char Scissors::getEndByte( ) {
    return END_BYTE;
 }
 
 
-char Puree::getDelimiter( ) {
+char Scissors::getDelimiter( ) {
    return DELIMITER;
 }
 
 
-int Puree::getMaxElements(  ) { 
+int Scissors::getMaxElements(  ) { 
 	return 	MAX_ELEMENTS ; 
 }
 

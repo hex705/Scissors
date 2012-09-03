@@ -1,22 +1,22 @@
-Puree  (ReadMe)
+Scissors  (ReadMe)
 =====  
 
-*Puree* is a simple Hardware Serial parsing library for Arduino.
+*Scissors* is a simple Hardware Serial parsing library for Arduino.
 
-As of August 2012, Puree is an alpha release.  It is tested and appears stable.  Please report bugs here:
+As of August 2012, Scissors is an alpha release.  It is tested and appears stable.  Please report bugs here:
 
-[https://github.com/hex705/Puree/issues](https://github.com/hex705/Puree/issues "Issues")
+[https://github.com/hex705/Scissors/issues](https://github.com/hex705/Scissors/issues "Issues")
 
 
 
 Quick Start
 ---------------
 
-1. Obtain archive (.zip) @  [https://github.com/hex705/Puree](https://github.com/hex705/Puree "Download")
+1. Obtain archive (.zip) @  [https://github.com/hex705/Scissors](https://github.com/hex705/Scissors "Download")
 
 3. Unzip and copy folder (OSX) into:   ~/Documents/Arduino/libraries
 
-4. Start pureeing data streams.
+4. Start cutting data streams.
 
 Downloaded folder contains library, and examples.
 
@@ -24,7 +24,7 @@ Downloaded folder contains library, and examples.
 Usage
 -----
 
-Puree expects structured messages with packages of the following form (spaces for clarity ONLY - do not include in your package):
+Scissors expects structured messages with packages of the following form (spaces for clarity ONLY - do not include in your package):
 
 
 	START_BYTE dataZero DELIMITER dataOne DELIMITER dataTwo DELIMITER END_BYTE
@@ -44,9 +44,9 @@ The example package has three data points indexed 0-2 (like an array).
 
 ###Instantiate
 
-Puree object must be declared at the  top of sketch:
+Scissors object must be declared at the  top of sketch:
 
-	Puree puree;
+	Scissors scissors;
 
 ###Defaults
 
@@ -62,15 +62,15 @@ Puree object must be declared at the  top of sketch:
 
 	void setup() {
 
-		puree.begin();  // will instantiate with defaults
+		scissors.begin();  // will instantiate with defaults
 
 	}
 
 ####Alternate constructors:
 
-	puree.begin( int );  // set baud
+	scissors.begin( int );  // set baud
 
-	puree.begin( int, char, char, char ); // baud, startByte, endByte, delimiter
+	scissors.begin( int, char, char, char ); // baud, startByte, endByte, delimiter
 
 
 Debugging with serial communication ( eg. Serial.print() ) is possible once .begin() is called.
@@ -80,7 +80,7 @@ Debugging with serial communication ( eg. Serial.print() ) is possible once .beg
 
 Data is retrieved from the buffer within loop() with a call to:
 
-	puree.update();
+	scissors.update();
 
 Returns the number (int) of data points found in current package.
 
@@ -89,9 +89,9 @@ Returns the number (int) of data points found in current package.
 
 Incoming serial data is stored in a string buffer that is automatically parsed at delimiters upon receipt.  Individual values can be obtained by by calling the following get functions:
 
-	puree.getInt( index );		// returns an int
-	puree.getFloat( index );    // returns a float
-	puree.getString( index );   // returns a String (Arduino String not a char[] )
+	scissors.getInt( index );		// returns an int
+	scissors.getFloat( index );    // returns a float
+	scissors.getString( index );   // returns a String (Arduino String not a char[] )
 
 where index = data position in original data package (zero indexed)
 
@@ -99,7 +99,7 @@ where index = data position in original data package (zero indexed)
 
 You can retrieve the whole data stream with:
 
-	puree.getRaw();		// returns Serial buffer up to END_BYTE
+	scissors.getRaw();		// returns Serial buffer up to END_BYTE
 
 
 ###Package Size

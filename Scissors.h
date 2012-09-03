@@ -1,5 +1,5 @@
 //
-//  Puree.h
+//  Scissors.h
 //  
 //
 //  Created by steve daniels on 12-08-19.
@@ -7,8 +7,8 @@
 //
 
 
-#ifndef Puree_h
-#define Puree_h
+#ifndef Scissors_h
+#define Scissors_h
 
 
 #if defined(ARDUINO) && ARDUINO >= 100
@@ -21,7 +21,7 @@
 #include <WString.h>        // String
 #include <HardwareSerial.h>
 
-class Puree
+class Scissors
 {
 	
 public: 
@@ -77,7 +77,7 @@ private:
 	
 	
 	
-}; //endclass Puree
+}; //endclass Scissors
 
 
 #endif
