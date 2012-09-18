@@ -18,7 +18,7 @@ Scissors cut;
 
 void setup() {
   
-  cut.begin();
+  cut.begin(19200);
   pinMode(13,OUTPUT);
   
 }
@@ -26,7 +26,7 @@ void setup() {
 
 void loop() {
   
-  if (cut.update() > 0) { // have a new message
+  if (cut.update() > 0) { // have a new message?
       
         int on = cut.getInt(0);
         int off= cut.getInt(1);
