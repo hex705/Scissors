@@ -179,7 +179,11 @@ String Scissors::getElement ( int whichOne ){  // not called directly by user
 
 
 int Scissors::getInt ( int whichOne ){
-  
+    
+    // http://www.cplusplus.com/reference/clibrary/cstdlib/atoi/
+    // no standard way to solve issue of STRING input not being in range of INT
+    // this will fail QUITELY!!!!
+    
   String elementString = getElement(whichOne);
   
   char char_buff[elementString.length() + 1];
