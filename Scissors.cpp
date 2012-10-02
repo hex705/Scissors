@@ -80,7 +80,16 @@ int Scissors::update() {
    int s = messageBuffer.indexOf(START_BYTE);
    //int e = messageBuffer.indexOf(END_BYTE);
    int e = messageBuffer.lastIndexOf(DELIMITER);
-   
+				Serial.print("e is ");
+				Serial.println(e);
+   if (e <= 0) { // did not find a delimiter
+	
+		// so, check for an end byte, some messages do not have DELIMITERS
+		  e = messageBuffer.indexOf(END_BYTE);
+				Serial.print("e could be ");
+				Serial.println(e);
+	}
+	
    if (s >= 0 ) { 
  
      messageStart = s;
@@ -90,8 +99,10 @@ int Scissors::update() {
         // appear to have a whole message -- reset parse values
       // messageEnd = messageBuffer.lastIndexOf(DELIMITER);
        // memset( delims, 0, ( sizeof(delims) / sizeof(delims[0]) ) ); // clear delims array for new values
-       
-       state = findDelimiters();
+      
+         state = findDelimiters();
+
+	}
        
        Serial.flush();
        delay(1);
@@ -119,8 +130,7 @@ int Scissors::findDelimiters() {
     // delims array stores locations of DELIMITERS -- there 
           elementCount = 0;
           delims[elementCount] = messageStart;     
-           
-          
+             
           for (int i = messageStart+1; i <= messageEnd;  i ++) {  
             
             if (elementCount > MAX_ELEMENTS) break; // message is longer than max -- overflow
@@ -133,6 +143,7 @@ int Scissors::findDelimiters() {
                   
             } // end if         
             
+			
           } // end for 
    
    return elementCount;
