@@ -96,6 +96,14 @@ Debugging with serial communication ( eg. Serial.print() ) is possible once .beg
     scissors.setEndByte  ( CHAR );
     scissors.setDelimiter( CHAR );   
    
+
+####Getting Payload Parameters
+
+	char sb = scissors.getStartByte(); 
+	char eb = scissors.getEndByte  ();
+	char de = scissors.getDelimiter();
+
+
 ####Payloads without DELIMITERS
 Some devices send payloads with START\_BYTEs and END\_BYTEs but no DELIMITERS (single element payloads).
 RFID is an example of this -- to have SCISSORS return these PAYLOADs set delimiter to a negative value in your setup(){} routine.
