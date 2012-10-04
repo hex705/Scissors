@@ -69,6 +69,7 @@ int Scissors::update() {
     
     delay(10);  // for reasons I don't understand this is really important -- do not remove
     
+	// go get all the characters in the buffer
     while(Serial.available() > 0) { 
       
       char c = Serial.read();
@@ -80,14 +81,14 @@ int Scissors::update() {
    int s = messageBuffer.indexOf(START_BYTE);
    //int e = messageBuffer.indexOf(END_BYTE);
    int e = messageBuffer.lastIndexOf(DELIMITER);
-				Serial.print("e is ");
-				Serial.println(e);
+			//	Serial.print("e is ");
+			//	Serial.println(e);
    if (e <= 0) { // did not find a delimiter
 	
 		// so, check for an end byte, some messages do not have DELIMITERS
 		  e = messageBuffer.indexOf(END_BYTE);
-				Serial.print("e could be ");
-				Serial.println(e);
+			//	Serial.print("e could be ");
+			//	Serial.println(e);
 	}
 	
    if (s >= 0 ) { 
@@ -100,13 +101,13 @@ int Scissors::update() {
       // messageEnd = messageBuffer.lastIndexOf(DELIMITER);
        // memset( delims, 0, ( sizeof(delims) / sizeof(delims[0]) ) ); // clear delims array for new values
       
-         state = findDelimiters();
+       state = findDelimiters();
 
-	}
+	  
        
        Serial.flush();
        delay(1);
-       //state= 1;
+
        
      } // end e>s
      else {
@@ -135,7 +136,7 @@ int Scissors::findDelimiters() {
             
             if (elementCount > MAX_ELEMENTS) break; // message is longer than max -- overflow
                                                      // this overflow is not YET signalled
-            if ( (messageBuffer.charAt(i) == DELIMITER)  ) { 
+            if ( (messageBuffer.charAt(i) == DELIMITER)   ) { 
                   
                   elementCount ++; 
                   delims[elementCount] = i ;
@@ -145,6 +146,16 @@ int Scissors::findDelimiters() {
             
 			
           } // end for 
+
+		// we are at end of message -- if elementCount still == 0 then there were no delimiters
+		// however, we can only be here if we had an end byte after a start byte -- 
+		// SO, there must be a single undelimited ELEMENT in the message 
+		if ( elementCount == 0 ) {
+		//	Serial.println("no delims");
+			elementCount = 1;
+			delims[1] = messageEnd;
+		}
+		
    
    return elementCount;
 
