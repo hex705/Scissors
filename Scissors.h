@@ -26,7 +26,6 @@ class Scissors
 	
 public: 
 	
-	
    String messageBuffer ; 
    String sub ;
 	
