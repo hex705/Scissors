@@ -46,12 +46,14 @@ public:
 	int setEndByte  ( char );
 	int setDelimiter( char );
 	int setMaxElements( int ) ;
+	
 		
 	// getters
 	char getStartByte   ( );
 	char getEndByte     ( );
 	char getDelimiter   ( );
 	int  getMaxElements ( ); 
+	int  getBaud        ( );
 
 private:
 	

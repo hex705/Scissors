@@ -6,6 +6,7 @@
 //  Copyright (c) 2012 __ribosome.ca__. All rights reserved.
 //
 
+
 #if defined(ARDUINO) && ARDUINO >= 100
 #include "Arduino.h"
 #else
@@ -19,25 +20,23 @@
 
 void Scissors::begin()
 {
-	Scissors::init( 19200, '*', '#', ',' ); // default setup
+	init( 19200, '*', '#', ',' ); // default setup
 }
 
 void Scissors::begin( int _baud )
 {
-	Scissors::init( _baud, '*', '#', ',' ); // specified baud, default parse parameters
+	init( _baud, '*', '#', ',' ); // specified baud, default parse parameters
 }
 
 void Scissors::begin( int _baud, char _start_byte, char _end_byte, char _delimiter )
 {
-	Scissors::init( _baud,  _start_byte,  _end_byte,  _delimiter); // user specifies all terms
+	init( _baud,  _start_byte,  _end_byte,  _delimiter); // user specifies all terms
 }
 
 
 void Scissors::init( int _baud, char _start_byte, char _end_byte, char _delimiter)
 {
-	
-	
-	
+		
 	BAUD = _baud;
 	START_BYTE = _start_byte;
 	END_BYTE   = _end_byte;
@@ -52,7 +51,8 @@ void Scissors::init( int _baud, char _start_byte, char _end_byte, char _delimite
 	//String messageBuffer = "" ; 
 	//String sub ="";
 	
-	
+	Serial.end();
+	delay(5);
 	Serial.begin(BAUD);
 	
 }
@@ -103,8 +103,6 @@ int Scissors::update() {
       
        state = findDelimiters();
 
-	  
-       
        Serial.flush();
        delay(1);
 
@@ -120,7 +118,7 @@ int Scissors::update() {
    }
       
   } // if serial.available
-  
+  Serial.flush();
   return state;
   
 }
@@ -205,12 +203,16 @@ int Scissors::getInt ( int whichOne ){
     // http://www.cplusplus.com/reference/clibrary/cstdlib/atoi/
     // no standard way to solve issue of STRING input not being in range of INT
     // this will fail QUITELY!!!!
-    
+
+  
   String elementString = getElement(whichOne);
   
   char char_buff[elementString.length() + 1];
-  elementString.toCharArray(char_buff, sizeof(char_buff));
   
+  elementString.toCharArray(char_buff, sizeof(char_buff));
+  if (char_buff[0] <'0' || char_buff[0] > '9') {
+	Serial.println("NaN");	
+  }
   return atoi(char_buff);
 
 }
@@ -223,6 +225,10 @@ float Scissors::getFloat( int whichOne) {
   
   char char_buff[elementString.length() + 1];
   elementString.toCharArray(char_buff, sizeof(char_buff));
+
+  if (char_buff[0] <'0' || char_buff[0] > '9') {
+	Serial.println("NaN");	
+  }
   
   return atof(char_buff); 
 
@@ -285,6 +291,11 @@ char Scissors::getDelimiter( ) {
 
 int Scissors::getMaxElements(  ) { 
 	return 	MAX_ELEMENTS ; 
+}
+
+int Scissors::getBaud(){
+	
+	return BAUD ;
 }
 
 
