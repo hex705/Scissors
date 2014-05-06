@@ -21,21 +21,27 @@
 #include <WString.h>        // String
 #include <HardwareSerial.h>
 
+#define LOCAL 0
+
 class Scissors
 {
 	
 public: 
-	
+
+
    String messageBuffer ; 
    String sub ;
 	
     // constructors
-    void  begin();      // default baud
 	void  begin( int ); // baud
 	void  begin( int, char, char, char ); // baud, start,end, delim
 	
+	
 	// parse functions
 	int    update    ( );
+	int    update    ( String );
+	int errorCheck();
+	
 	int    getInt    ( int );
 	float  getFloat  ( int );
 	String getString ( int );
@@ -68,6 +74,10 @@ private:
 	int messageStart ; // = -1;
 	int messageEnd   ; // = -1;
 	int delims[8]   ; //   [MAX_ELEMENTS+1]   array to hold delimiter locations in buffer string
+	
+   // create version where we pass a string for parsing
+    boolean useSerial; // turn off serial when 1 passed as BAUD
+
 	
 	// buffers for incoming data ( yes they could be a char[] -- but they arn't )
 
