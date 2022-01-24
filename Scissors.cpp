@@ -115,6 +115,9 @@ int  Scissors::errorCheck() {
 	messageStart = -1;
 	messageEnd   = -1;
 
+  Serial.println(" got message in");
+	Serial.println(messageBuffer);
+
 	// a bit of error checking
 	int s = messageBuffer.indexOf(START_BYTE);
 	int e = messageBuffer.indexOf(END_BYTE);
@@ -155,18 +158,14 @@ int  Scissors::errorCheck() {
 		if  (status == 1) {
 			messageStart = s;
 			messageEnd = e;
+
 			state = findDelimiters();
+			Serial.print("state = ");
+			Serial.println(state);
 		}
 
 		delay(1);
 	} // end else if s<e
-
-	// } // end e>s
-	// else {
-	//  state = -2; // no end found
-	// }
-
-
 
 	return state;
 }
@@ -183,7 +182,7 @@ int Scissors::findDelimiters() {
 
 		if (elementCount > MAX_ELEMENTS) break; // message is longer than max -- overflow
 		// this overflow is not YET signalled
-		if ( (messageBuffer.charAt(i) == DELIMITER)   ) {
+		if ( (messageBuffer.charAt(i) == DELIMITER)||(messageBuffer.charAt(i) == END_BYTE)   ) {
 
 			elementCount ++;
 			delims[elementCount] = i ;
@@ -191,8 +190,10 @@ int Scissors::findDelimiters() {
 
 		} // end if
 
-
 	} // end for
+
+	Serial.println("delims");
+	for (int i: delims) {Serial.print(i);Serial.print(' ');}
 
 	// we are at end of message -- if elementCount still == 0 then there were no delimiters
 	// however, we can only be here if we had an end byte after a start byte --

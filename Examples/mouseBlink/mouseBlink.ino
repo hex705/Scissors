@@ -20,13 +20,25 @@ int ledPin = 5;
 int on = 0;
 int off = 0;
 
-void setup() {
+int LED_STATE=1;
+int LAST_STATE = 0;
 
+unsigned long timeNow;
+unsigned long startTime;
+
+String s = ("*1000,1000#");
+
+
+void setup() {
+  
   cut.begin(19200);
   pinMode(ledPin,OUTPUT);
-
+  
+  cut.update(s);
+  delay(10);
+  on = cut.getInt(0);
+  off= cut.getInt(1);
 }
-
 
 void loop() {
 
@@ -49,11 +61,52 @@ void loop() {
 
 void blink (int onTime, int offTime) {
 
-       digitalWrite(ledPin,HIGH);
-       delay(onTime);
+  timeNow = millis();
 
-       digitalWrite(ledPin,LOW);
-       delay(offTime);
+  // error check your data
+  if ( onTime < 0 ) { 
+    onTime = 0;
+    Serial.println("onTime set to zero");
+  }
+
+  if ( offTime < 0 ) { 
+    offTime = 0;
+    Serial.println("offTime set to zero");
+  }
+
+  if ( LED_STATE == HIGH) {
+    if ( timeNow - startTime > onTime){
+      LED_STATE = LOW;
+      startTime += onTime;
+    }
+  }
+
+  if ( LED_STATE == LOW) {
+    if ( timeNow - startTime > offTime){
+      LED_STATE = HIGH;
+      startTime += offTime;
+    }
+  }
+//  if ( LAST_STATE!=LED_STATE) {
+//    Serial.println("changed state");
+//          Serial.print("on = ");
+//        Serial.println(onTime);
+//        Serial.print("off = ");
+//        Serial.println(offTime);
+//        Serial.println();
+//  }
+  
+  digitalWrite(ledPin,LED_STATE);
+  LAST_STATE = LED_STATE;
+
+
+//       digitalWrite(ledPin,HIGH);
+//       delay(onTime);
+//
+//       digitalWrite(ledPin,LOW);
+//       delay(offTime);
+
+       
 
 }
 
