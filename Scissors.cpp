@@ -1,6 +1,6 @@
 //
 //  Scissors.cpp
-//  
+//
 //
 //  Created by steve daniels on 12-08-19.
 //  Copyright (c) 2012 __ribosome.ca__. All rights reserved.
@@ -21,17 +21,15 @@
 
 void Scissors::begin( int _baud )
 {
-	if ( _baud == LOCAL ) {
+	if ( _baud == LOCAL ) { // baud of zero no serial
 		useSerial = false;
 	} else {
 		useSerial = true;
 	}
-	
+
 	init( _baud, '*', '#', ',' ); // specified baud, default parse parameters
-	
+
 }
-
-
 
 void Scissors::begin( int _baud, char _start_byte, char _end_byte, char _delimiter )
 {
@@ -39,327 +37,332 @@ void Scissors::begin( int _baud, char _start_byte, char _end_byte, char _delimit
 }
 
 
-
+//
 void Scissors::init( int _baud, char _start_byte, char _end_byte, char _delimiter)
 {
-		
+
 	BAUD = _baud;
 	START_BYTE = _start_byte;
 	END_BYTE   = _end_byte;
 	DELIMITER  = _delimiter;
 	MAX_ELEMENTS = 8;
-	
+
 	elementCount =  0;
 	messageStart = -1;
 	messageEnd   = -1;
 	delims[MAX_ELEMENTS+1]        ; //   [MAX_ELEMENTS+1]   array to hold delimiter locations in buffer string
-	
-	//String messageBuffer = "" ; 
+
+	//String messageBuffer = "" ;
 	//String sub ="";
 	if ( useSerial )  {
 		Serial.end();
 		delay(5);
 		Serial.begin(BAUD);
 	}
-	
+
 }
 
 
 
 int Scissors::update() {
-  
-  int state = -99;
+
+	int state = -99;
 
 	if ( useSerial ) {
- 
-  		if ( Serial.available() ){
-   
-		    messageBuffer =""; // clear the buffer
-		    messageStart = -1;
-		    messageEnd   = -1;
-   
-		    delay(10);  // for reasons I don't understand this is really important -- do not remove
-   
+
+		if ( Serial.available() ){
+
+			messageBuffer =""; // clear the buffer
+			messageStart = -1;
+			messageEnd   = -1;
+
+			delay(10);  // for reasons I don't understand this is really important -- do not remove
+
+			// J22 -- this must be blocking ? check ?
 			// go get all the characters in the buffer
-		    while(Serial.available() > 0) { 
-     
-		      char c = Serial.read();
-		      messageBuffer += c;
-       
-		    }
+			while(Serial.available() > 0) {
+
+				char c = Serial.read(); // read char
+				messageBuffer += c; // store it in string
+			}
 
 			state = errorCheck();
-     
-		  } // if serial.available
-		
-  		Serial.flush();
-    }  // end useSerial
-  return state;
-  
+
+		} // if serial.available
+
+		Serial.flush();
+	}  // end useSerial
+	return state;
+
 }
-
-
 
 int Scissors::update(String inString) {
-  
-    int state = 0;
-	messageBuffer = inString;
-	errorCheck(); 
-	//Serial.print("MB");
-	//Serial.println(messageBuffer);
-    return state;
-  
-}
-
-
-int  Scissors::errorCheck() {
 
 	int state = 0;
-	
+	messageBuffer = inString;
+	errorCheck();
+	//Serial.print("MB");
+	//Serial.println(messageBuffer);
+	return state;
+
+}
+
+// [j22 - fix this first]
+int  Scissors::errorCheck() {
+	int state = -1; // number of delimiters found
+	int status = 6; // parse status, 1 = success
+
 	messageStart = -1;
-    messageEnd   = -1;
+	messageEnd   = -1;
 
 	// a bit of error checking
-   int s = messageBuffer.indexOf(START_BYTE);
-   //int e = messageBuffer.indexOf(END_BYTE);
-   int e = messageBuffer.lastIndexOf(DELIMITER);
-			//	Serial.print("e is ");
-			//	Serial.println(e);
-   if (e <= 0) { // did not find a delimiter
+	int s = messageBuffer.indexOf(START_BYTE);
+	int e = messageBuffer.indexOf(END_BYTE);
+	int d = messageBuffer.lastIndexOf(DELIMITER);
 
-		// so, check for an end byte, some messages do not have DELIMITERS
-		  e = messageBuffer.indexOf(END_BYTE);
-			//	Serial.print("e could be ");
-			//	Serial.println(e);
-	}
+	if (s == -1) {
+		status = 5; // no start
+		Serial.println("no start");
+	} else if (e == -1) {
+		status = 4; // no end
+		Serial.println("no end");
+	} else if (s<e) {
+		//havestart and end - in correct order
+		status = 1; // potential message
+		Serial.println("start and end ok");
 
-   if (s >= 0 ) { 
+		// check for empty, s and e side by side
+		if ( s == e-1){
+			status = 2;
+			Serial.println("empty message");
+		}   //  s==e-1
 
-     messageStart = s;
+		// check if no DELIMITERS - may only have end byte
+		if (d <= 0){
+			Serial.println("no delims - message with one token");
+			// set end of message to end byte
+			e = messageBuffer.indexOf(END_BYTE);
+		} // d<=0
 
-     if (e > s)  {	   
-         messageEnd = e;
-        // appear to have a whole message -- reset parse values
-       // messageEnd = messageBuffer.lastIndexOf(DELIMITER);
-       // memset( delims, 0, ( sizeof(delims) / sizeof(delims[0]) ) ); // clear delims array for new values
+		//check for delim beside end
+		// if true make end = delim, not end byte
+		if (d == e-1) {
+			Serial.println("comma before end, what to do ?");
+			e = d;
+		}
 
-       state = findDelimiters();
+		// ok to parse - have message
+		if  (status == 1) {
+			messageStart = s;
+			messageEnd = e;
+			state = findDelimiters();
+		}
 
-       delay(1);
+		delay(1);
+	} // end else if s<e
+
+	// } // end e>s
+	// else {
+	//  state = -2; // no end found
+	// }
 
 
-     } // end e>s
-     else {
-      state = -2; // no end found 
-     }
 
-   } // end s>=0
-   else {
-     state = -1; // no start  
-   }
-
-
-  return state;
+	return state;
 }
 
 
 
 int Scissors::findDelimiters() {
-  
-    // delims array stores locations of DELIMITERS -- there 
-          elementCount = 0;
-          delims[elementCount] = messageStart;     
-             
-          for (int i = messageStart+1; i <= messageEnd;  i ++) {  
-            
-            if (elementCount > MAX_ELEMENTS) break; // message is longer than max -- overflow
-                                                     // this overflow is not YET signalled
-            if ( (messageBuffer.charAt(i) == DELIMITER)   ) { 
-                  
-                  elementCount ++; 
-                  delims[elementCount] = i ;
-                  if (messageBuffer.charAt(i+1) == END_BYTE) break;
-                  
-            } // end if         
-            
-			
-          } // end for 
 
-		// we are at end of message -- if elementCount still == 0 then there were no delimiters
-		// however, we can only be here if we had an end byte after a start byte -- 
-		// SO, there must be a single undelimited ELEMENT in the message 
-		if ( elementCount == 0 ) {
+	// delims array stores locations of DELIMITERS -- there
+	elementCount = 0;
+	delims[elementCount] = messageStart;
+
+	for (int i = messageStart+1; i <= messageEnd;  i ++) {
+
+		if (elementCount > MAX_ELEMENTS) break; // message is longer than max -- overflow
+		// this overflow is not YET signalled
+		if ( (messageBuffer.charAt(i) == DELIMITER)   ) {
+
+			elementCount ++;
+			delims[elementCount] = i ;
+			if (messageBuffer.charAt(i+1) == END_BYTE) break;
+
+		} // end if
+
+
+	} // end for
+
+	// we are at end of message -- if elementCount still == 0 then there were no delimiters
+	// however, we can only be here if we had an end byte after a start byte --
+	// SO, there must be a single undelimited ELEMENT in the message
+	if ( elementCount == 0 ) {
 		//	Serial.println("no delims");
-			elementCount = 1;
-			delims[1] = messageEnd;
-		}
-		
-   
-   return elementCount;
+		elementCount = 1;
+		delims[1] = messageEnd;
+	}
+
+
+	return elementCount;
 
 }  // end parser
 
 
 String Scissors::getElement ( int whichOne ){  // not called directly by user
 
-  sub ="";
-  if ( (whichOne >= 0) && (whichOne <= elementCount) ) 
-  {
-    
-      int startLoc = delims[whichOne]+1 ;
-      int endLoc   = delims[whichOne+1] ;
-      
-      if ( startLoc > endLoc ) // START_BYTE comes after END_BYTE
-      {  
-	
-         sub = "err: Sb4E";   // start before end
-          
-      } 
-      else {  // START_BYTE preceeds END_BYTE
-        
-         for (int c = startLoc ;  c < endLoc ; c++ ) 
-         {
-         	sub += messageBuffer.charAt(c);
-         }
-        
-      }
- 
-     
-  } 
-  else {
-    
-  	sub = "err: ElOoR"; // element out of range
+	sub ="";
+	if ( (whichOne >= 0) && (whichOne <= elementCount) )
+	{
 
-  }
+		int startLoc = delims[whichOne]+1 ;
+		int endLoc   = delims[whichOne+1] ;
 
-   return sub;
-  
+		if ( startLoc > endLoc ) // START_BYTE comes after END_BYTE
+		{
+
+			sub = "err: Sb4E";   // start before end
+
+		}
+		else {  // START_BYTE preceeds END_BYTE
+
+			for (int c = startLoc ;  c < endLoc ; c++ )
+			{
+				sub += messageBuffer.charAt(c);
+			}
+
+		}
+
+
+	}
+	else {
+
+		sub = "err: ElOoR"; // element out of range
+
+	}
+
+	return sub;
+
 } // end getElement
 
 
 
 int Scissors::getInt ( int whichOne ){
-    
-    // http://www.cplusplus.com/reference/clibrary/cstdlib/atoi/
-    // no standard way to solve issue of STRING input not being in range of INT
-    // this will fail QUITELY!!!!
+
+	// http://www.cplusplus.com/reference/clibrary/cstdlib/atoi/
+	// no standard way to solve issue of STRING input not being in range of INT
+	// this will fail QUITELY!!!!
 
 	int lowIndex = 0;
-	
-  	String elementString = getElement(whichOne);
 
-	  char char_buff[elementString.length() + 1];
-  
-	  elementString.toCharArray(char_buff, sizeof(char_buff));
+	String elementString = getElement(whichOne);
 
-		// check for neg -- without this we reject neg values
-		if ( char_buff[0] == '-' )  {	
-			lowIndex = 1;
-			//Serial.println("neg val");
-		}
+	char char_buff[elementString.length() + 1];
 
-	  if ( ( char_buff[lowIndex] <'0' || char_buff[0] > '9') ) {
+	elementString.toCharArray(char_buff, sizeof(char_buff));
+
+	// check for neg -- without this we reject neg values
+	if ( char_buff[0] == '-' )  {
+		lowIndex = 1;
+		//Serial.println("neg val");
+	}
+
+	if ( ( char_buff[lowIndex] <'0' || char_buff[0] > '9') ) {
 		Serial.println("NaN char_buff next :: ");
 		Serial.print(char_buff);
 		return -9999;
-	  }
+	}
 
-	 return atoi(char_buff);
+	return atoi(char_buff);
 
 }
 
 
 
 float Scissors::getFloat( int whichOne) {
-  
-  int lowIndex = 0;
-	
-  String elementString = getElement(whichOne);
-  
-  	char char_buff[elementString.length() + 1];
+
+	int lowIndex = 0;
+
+	String elementString = getElement(whichOne);
+
+	char char_buff[elementString.length() + 1];
 
 	elementString.toCharArray(char_buff, sizeof(char_buff));
-	
+
 	// check for neg -- without this we reject neg values
-    if ( char_buff[0] == '-' )  {	
-			lowIndex = 1;
-			delay(10);
+	if ( char_buff[0] == '-' )  {
+		lowIndex = 1;
+		delay(10);
 	}
 
-	  if (char_buff[lowIndex] <'0' || char_buff[0] > '9') {
+	if (char_buff[lowIndex] <'0' || char_buff[0] > '9') {
 		Serial.println("NaN");
 		return -9999;
-	  }
-  
-  return atof(char_buff); 
+	}
+
+	return atof(char_buff);
 
 }
 
 
 
 String Scissors::getString (int whichOne) {
-  return getElement(whichOne);
+	return getElement(whichOne);
 }
 
 
 String Scissors::getRaw() {
-   return messageBuffer; 
+	return messageBuffer;
 }
 
 
 
 int Scissors::setStartByte(char s) {
-  START_BYTE = s;
-  return 1;
+	START_BYTE = s;
+	return 1;
 }
 
 
 int Scissors::setEndByte(char e) {
-  END_BYTE = e;
-  return 1;
-  
+	END_BYTE = e;
+	return 1;
+
 }
 
 
 int Scissors::setDelimiter(char d) {
-  DELIMITER = d;
-  return 1;
-  
+	DELIMITER = d;
+	return 1;
+
 }
 
 int Scissors::setMaxElements( int m ) {
 	MAX_ELEMENTS = m;
-	delims[MAX_ELEMENTS+1];    
-	return 1; 
+	delims[MAX_ELEMENTS+1];
+	return 1;
 }
 
 
 char Scissors::getStartByte( ) {
-   return START_BYTE;
+	return START_BYTE;
 }
 
 
 char Scissors::getEndByte( ) {
-   return END_BYTE;
+	return END_BYTE;
 }
 
 
 char Scissors::getDelimiter( ) {
-   return DELIMITER;
+	return DELIMITER;
 }
 
 
-int Scissors::getMaxElements(  ) { 
-	return 	MAX_ELEMENTS ; 
+int Scissors::getMaxElements(  ) {
+	return 	MAX_ELEMENTS ;
 }
 
 int Scissors::getBaud(){
-	
+
 	return BAUD ;
 }
-
-
-
-
-
-
