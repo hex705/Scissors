@@ -2,7 +2,7 @@
 // Scissors v0.01
 // Scissors Example:  mouseBlink (v1)
 
-// mouseBlink uses Scissors to parse messages from a Processing sketch (below) 
+// mouseBlink uses Scissors to parse messages from a Processing sketch (below)
 // and uses data to control blink rate of LED on pin13
 
 // Scissors and this Example by hex705 (Steve Daniels)
@@ -15,36 +15,46 @@
 #include <Scissors.h>
 
 Scissors cut;
+int ledPin = 5;
+
+int on = 0;
+int off = 0;
 
 void setup() {
-  
+
   cut.begin(19200);
-  pinMode(13,OUTPUT);
-  
+  pinMode(ledPin,OUTPUT);
+
 }
 
 
 void loop() {
-  
+
   if (cut.update() > 0) { // have a new message?
-      
-        int on = cut.getInt(0);
-        int off= cut.getInt(1);
-        
-        blink(on,off);     
+
+        // get the values
+        on = cut.getInt(0);
+        off= cut.getInt(1);
+
+        Serial.println("\nrecieved:");
+        Serial.print("on = ");
+        Serial.println(on);
+        Serial.print("off = ");
+        Serial.println(off);
+        Serial.println();
   }
-    
+    blink(on,off);
 }
 
 
 void blink (int onTime, int offTime) {
-   
-       digitalWrite(13,HIGH);
+
+       digitalWrite(ledPin,HIGH);
        delay(onTime);
-       
-       digitalWrite(13,LOW);
+
+       digitalWrite(ledPin,LOW);
        delay(offTime);
-  
+
 }
 
 
@@ -64,7 +74,7 @@ void blink (int onTime, int offTime) {
 //// Scissors v0.01
 //// Scissors Example:  Prcessing Sketch for mouseBlink (v1)
 //
-//// mouseBlink uses Scissors to parse messages from this Processing sketch 
+//// mouseBlink uses Scissors to parse messages from this Processing sketch
 //// and uses data to control blink rate of LED on pin13
 //
 //// Scissors and this Example by hex705 (Steve Daniels)
@@ -80,19 +90,19 @@ void blink (int onTime, int offTime) {
 //  import processing.serial.*;
 //
 //  // variables
-//  Serial myPort;       
+//  Serial myPort;
 //  int cycleLength = 50;
 //  int duty = 0;
 //
 //
 //void setup() {
 //  frameRate(10);
-//  
+//
 //  size(550,100);
-//  
+//
 //  // List all the available serial ports
 //  println(Serial.list());
-//  
+//
 //  // connect this sketch to the USB port or your Arduino at specified BAUD
 //  myPort = new Serial(this, Serial.list()[0], 19200);
 //
@@ -100,14 +110,14 @@ void blink (int onTime, int offTime) {
 //
 //
 //void draw() {
-//  
+//
 //  drawBackground();
-//  
+//
 //  int selectedDutyCycle = handleMouse(); // draws mouse location in red
 //                                         // and returns the selected cycle (0-10)
-//                                         
+//
 //  //map the selection to ON / OFF time for LED (cycleDuration is 1000mS)
-//  
+//
 //  int onTime = selectedDutyCycle*100; // scale mousePosition to time (mS) 0 -1000
 //  int offTime = 1000 - onTime;        // basic cycleLength is 1000 mS
 //
@@ -117,45 +127,42 @@ void blink (int onTime, int offTime) {
 //  String message = ("*"  + onTime+ "," + offTime + ",#"); // onTime, offTime
 //  myPort.write(message);
 //  println(message);
-//  
-//} 
+//
+//}
 //
 //
 //
 //void drawBackground(){
-//  
+//
 //  // set colors
 //  background (255);
 //  fill( 0 );
 //  noStroke();
-//  
+//
 //  // draw duty cycles
-//  duty = 0; 
+//  duty = 0;
 //  for (int i = 0; i < 11; i ++ ) {  // 5 white rectangles
 //      rect ( ((i*cycleLength)+duty), 0, cycleLength - duty , height);
 //      duty +=5;
 //  }
-//   
+//
 //} // end drawBackground
 //
 //
 //
 //int handleMouse() {
-//  
+//
 //   // set colors
 //   stroke(255,0,0);
 //   fill(255,0,0,20);
 //   strokeWeight(4);
-//   
+//
 //   // determine which cycle we are hovering over
 //   int selectedCycle = mouseX / cycleLength;
-//   
+//
 //   rect (selectedCycle*cycleLength,0,cycleLength,height);
-//   
+//
 //   return selectedCycle;
 //}
 //
 //
-
-
-
