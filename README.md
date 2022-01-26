@@ -9,6 +9,12 @@ As of August 2012, Scissors is an alpha release.  It is tested and appears stabl
 
 [https://github.com/hex705/Scissors/issues](https://github.com/hex705/Scissors/issues "Issues")
 
+January 2022 Arduino Scissors update
+-- correct some error handling
+-- serial is now passed to the library
+-- debug can be turned on an off
+-- delimiter before end byte no longer required, but kept for legacy
+-- examples expanded -- more to come
 
 
 Quick Start
@@ -16,7 +22,7 @@ Quick Start
 
 1. Obtain archive (.zip) @  [https://github.com/hex705/Scissors](https://github.com/hex705/Scissors "Download")
 
-2. Unzip and (if needed) rename folder Scissors 
+2. Unzip and (if needed) rename folder Scissors
 
 3. Copy folder (OSX) into:   ~/Documents/Arduino/libraries
 
@@ -53,7 +59,7 @@ Include the Scissors library.
 
 		#include <Scissors.h>
 
-		
+
 The include statement can be added via menu:: Sketch --> Import Library --> Glue
 ###Instantiate
 
@@ -75,7 +81,7 @@ Scissors object must be declared at the  top of sketch:
 
 	void setup() {
 
-		scissors.begin( );  // will instantiate with defaults 
+		scissors.begin( );  // will instantiate with defaults
 
 	}
 
@@ -92,14 +98,14 @@ Debugging with serial communication ( eg. Serial.print() ) is possible once .beg
 
 ####Setting Payload Parameters
 
-	scissors.setStartByte( CHAR ); 
+	scissors.setStartByte( CHAR );
     scissors.setEndByte  ( CHAR );
     scissors.setDelimiter( CHAR );   
-   
+
 
 ####Getting Payload Parameters
 
-	char sb = scissors.getStartByte(); 
+	char sb = scissors.getStartByte();
 	char eb = scissors.getEndByte  ();
 	char de = scissors.getDelimiter();
 
@@ -168,8 +174,8 @@ First version uploaded to GITHUB
 
 
 ____
-  
-  
+
+
 
 TO DO:
 ------
@@ -179,7 +185,4 @@ TO DO:
  * tie to Stream not serial -- enabling use with Ethernet Shield
 		Note: this will change the instantiation and API
 
- * full documentation 
-
-
-
+ * full documentation

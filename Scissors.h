@@ -28,14 +28,19 @@ class Scissors
 
 public:
 
-
    String messageBuffer ;
    String sub ;
 
-    // constructors
-	void  begin( int ); // baud
-	void  begin( int, char, char, char ); // baud, start,end, delim
+   //constructor
+   Scissors();
 
+   // setup functions
+   void begin();
+   void begin(char, char, char);
+   void begin( Stream & );
+   void begin( Stream &, char, char, char );
+   // testing
+   void sendText(String);
 
 	// parse functions
 	int    update    ( );
@@ -53,7 +58,6 @@ public:
 	int setDelimiter( char );
 	int setMaxElements( int ) ;
 
-
 	// getters
 	char getStartByte   ( );
 	char getEndByte     ( );
@@ -61,13 +65,20 @@ public:
 	int  getMaxElements ( );
 	int  getBaud        ( );
 
+  // debug levels
+  int VERBOSE = 0;
+  int setDebug (int);
+
 private:
 
+  void init (char,char,char);
+
+  Stream *theStream;
 	// internal vars & parsing variables
-	char START_BYTE;
-	char END_BYTE  ;
-	char DELIMITER ;
-	int  MAX_ELEMENTS;
+	char START_BYTE = '*';
+	char END_BYTE ='#' ;
+	char DELIMITER= ',';
+	int  MAX_ELEMENTS=8;
 	int  BAUD ;
 
 	int elementCount ; //=  0;
@@ -76,7 +87,7 @@ private:
 	int delims[8]   ; //   [MAX_ELEMENTS+1]   array to hold delimiter locations in buffer string
 
    // create version where we pass a string for parsing
-    boolean useSerial; // turn off serial when 1 passed as BAUD -- [jan2022 1 or 0? LOCAL defined as 0 above]
+    boolean useSerial=true; // turn off serial when 1 passed as BAUD -- [jan2022 1 or 0? LOCAL defined as 0 above]
 
 
 	// buffers for incoming data ( yes they could be a char[] -- but they arn't )

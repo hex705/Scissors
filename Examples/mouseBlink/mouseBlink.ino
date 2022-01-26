@@ -1,16 +1,25 @@
 
-// Scissors v0.01
-// Scissors Example:  mouseBlink (v1)
+// Scissors v0.02
+// Scissors Example:  mouseBlink
 
-// mouseBlink uses Scissors to parse messages from a Processing sketch (below)
-// and uses data to control blink rate of LED on pin13
+// mouseBlink uses Scissors to parse strings originating
+// from serial streams
+// send messages from serial monitor or from processing (sketch below).
+
+// default message structure
+// start     = '*'
+// end       = '#'
+// delimeter = ','
+// mesage strcuture :: *data0,data1#
+
+// can parse up to 8 data tokens -- may get slower at that level (YMMV)
 
 // Scissors and this Example by hex705 (Steve Daniels)
-// August 2012, All Rights Reserved.
+// January 2012, All Rights Reserved.
+// updated jan 2022
 
 // Scissors and similar Libraries can be found at:
 // https://github.com/hex705
-
 
 #include <Scissors.h>
 
@@ -26,18 +35,13 @@ int LAST_STATE = 0;
 unsigned long timeNow;
 unsigned long startTime;
 
-String s = ("*1000,1000#");
-
 
 void setup() {
   
-  cut.begin(19200);
+  Serial.begin(9600);
+  cut.begin(Serial);
   pinMode(ledPin,OUTPUT);
   
-  cut.update(s);
-  delay(10);
-  on = cut.getInt(0);
-  off= cut.getInt(1);
 }
 
 void loop() {
@@ -75,26 +79,31 @@ void blink (int onTime, int offTime) {
   }
 
   if ( LED_STATE == HIGH) {
-    if ( timeNow - startTime > onTime){
-      LED_STATE = LOW;
-      startTime += onTime;
+    if (offTime != 0){
+      if ( timeNow - startTime > onTime){
+        LED_STATE = LOW;
+        startTime += onTime;
+      }
     }
   }
 
   if ( LED_STATE == LOW) {
-    if ( timeNow - startTime > offTime){
-      LED_STATE = HIGH;
-      startTime += offTime;
+    if (onTime != 0){ 
+      if ( timeNow - startTime > offTime){
+        LED_STATE = HIGH;
+        startTime += offTime;
+      }
     }
   }
-//  if ( LAST_STATE!=LED_STATE) {
-//    Serial.println("changed state");
-//          Serial.print("on = ");
-//        Serial.println(onTime);
-//        Serial.print("off = ");
-//        Serial.println(offTime);
-//        Serial.println();
-//  }
+  
+  if ( LAST_STATE!=LED_STATE) {
+    Serial.println("changed state");
+          Serial.print("on = ");
+        Serial.println(onTime);
+        Serial.print("off = ");
+        Serial.println(offTime);
+        Serial.println();
+  }
   
   digitalWrite(ledPin,LED_STATE);
   LAST_STATE = LED_STATE;
@@ -114,7 +123,8 @@ void blink (int onTime, int offTime) {
 
 
 //  ****** Companion Processing Sketch ******
-
+// last tested with processing 4.0b2
+// january 2022
 
 
 // Copy and paste the following sketch into Processing
@@ -137,7 +147,7 @@ void blink (int onTime, int offTime) {
 //// https://github.com/hex705
 //
 //
-//
+
 //
 //  // import Libraries
 //  import processing.serial.*;
