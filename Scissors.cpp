@@ -178,8 +178,9 @@ int  Scissors::errorCheck() {
 			messageEnd = e;
 
 			state = findDelimiters();
-			Serial.print("state = ");
-			 if (VERBOSE==1) Serial.println(state);
+
+			 if (VERBOSE==1)
+			 Serial.print("state = "); Serial.println(state);
 		}
 
 		delay(1);
