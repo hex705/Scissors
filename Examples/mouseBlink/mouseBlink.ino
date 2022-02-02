@@ -37,16 +37,16 @@ unsigned long startTime;
 
 
 void setup() {
-  
+
   Serial.begin(9600);
   cut.begin(Serial);
   pinMode(ledPin,OUTPUT);
-  
+
 }
 
 void loop() {
 
-  if (cut.update() > 0) { // have a new message?
+  if (cut.listen() > 0) { // have a new message?
 
         // get the values
         on = cut.getInt(0);
@@ -68,12 +68,12 @@ void blink (int onTime, int offTime) {
   timeNow = millis();
 
   // error check your data
-  if ( onTime < 0 ) { 
+  if ( onTime < 0 ) {
     onTime = 0;
     Serial.println("onTime set to zero");
   }
 
-  if ( offTime < 0 ) { 
+  if ( offTime < 0 ) {
     offTime = 0;
     Serial.println("offTime set to zero");
   }
@@ -88,14 +88,14 @@ void blink (int onTime, int offTime) {
   }
 
   if ( LED_STATE == LOW) {
-    if (onTime != 0){ 
+    if (onTime != 0){
       if ( timeNow - startTime > offTime){
         LED_STATE = HIGH;
         startTime += offTime;
       }
     }
   }
-  
+
   if ( LAST_STATE!=LED_STATE) {
     Serial.println("changed state");
           Serial.print("on = ");
@@ -104,7 +104,7 @@ void blink (int onTime, int offTime) {
         Serial.println(offTime);
         Serial.println();
   }
-  
+
   digitalWrite(ledPin,LED_STATE);
   LAST_STATE = LED_STATE;
 
@@ -115,7 +115,7 @@ void blink (int onTime, int offTime) {
 //       digitalWrite(ledPin,LOW);
 //       delay(offTime);
 
-       
+
 
 }
 

@@ -81,7 +81,7 @@ void Scissors::init( char _start_byte, char _end_byte, char _delimiter)
 }
 
 // check buffer for data
-int Scissors::update() {
+int Scissors::listen() {
 
 	int state = -99;
 
@@ -114,7 +114,7 @@ int Scissors::update() {
 
 }
 
-int Scissors::update(String inString) {
+int Scissors::parse(String inString) {
 
 	int state = 0;
 	messageBuffer = inString;
@@ -179,8 +179,10 @@ int  Scissors::errorCheck() {
 
 			state = findDelimiters();
 
-			 if (VERBOSE==1)
-			 Serial.print("state = "); Serial.println(state);
+			 if (VERBOSE==1){
+			   Serial.print("state = ");
+				 Serial.println(state);
+		   }
 		}
 
 		delay(1);

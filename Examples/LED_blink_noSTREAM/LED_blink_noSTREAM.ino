@@ -30,7 +30,7 @@ int ledPin = 5;
 int on = 0;
 int off = 0;
 
-// timer and debug variables 
+// timer and debug variables
 int LED_STATE = 1;
 int LAST_STATE = 0;
 unsigned long timeNow;
@@ -48,7 +48,7 @@ void setup() {
 
 void loop() {
 
-    cut.update(s);
+    cut.parse(s);
     on = cut.getInt(0);
     off= cut.getInt(1);
 
@@ -56,20 +56,20 @@ void loop() {
 }
 
 // uses a timer so that we can update the times during each phase
-// try with delay to see why. 
+// try with delay to see why.
 
 void blink (int onTime, int offTime) {
 
   timeNow = millis();
 
-  // error check your data -- always 
+  // error check your data -- always
   // this is a timer so need positive numbers
-  if ( onTime < 0 ) { 
+  if ( onTime < 0 ) {
     onTime = 0;
     Serial.println("onTime set to zero");
   }
 
-  if ( offTime < 0 ) { 
+  if ( offTime < 0 ) {
     offTime = 0;
     Serial.println("offTime set to zero");
   }
@@ -91,9 +91,9 @@ void blink (int onTime, int offTime) {
 
 // ***************  DELAY SOLUTION
 // BLOCKING!  If we set the blink phases to long durations
-// we canpt update the inputs. 
-// Uncomment if you want to see it in action. 
-// 
+// we canpt update the inputs.
+// Uncomment if you want to see it in action.
+//
 //       digitalWrite(ledPin,HIGH);
 //       delay(onTime);
 //
@@ -110,7 +110,7 @@ void blink (int onTime, int offTime) {
       Serial.println(offTime);
       Serial.println();
   }
-  
+
   digitalWrite(ledPin,LED_STATE);
   LAST_STATE = LED_STATE;
 }

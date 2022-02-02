@@ -28,27 +28,27 @@ void setup() {
 }
 
 void loop() {
-  // wait for message 
-  if(cut.update()>0){
-    // have a message unpack it 
+  // wait for message
+  if(cut.listen()>0){
+    // have a message unpack it
     int    i = cut.getInt(0);
-    float  f = cut.getFloat(1); 
+    float  f = cut.getFloat(1);
     String s = cut.getString(2);
 
     Serial.println("\nReceived");
     Serial.println(cut.getRaw()); // raw message
-    Serial.println(i); // int      
+    Serial.println(i); // int
     Serial.println(f); // float
     Serial.println(s); // string
     Serial.println();
 
-    // repackage with glue 
+    // repackage with glue
     Serial.println("Glue repackaged to :: ");
     elmers.create();
     elmers.add(s);
     elmers.add(f);
     elmers.add(i);
-    elmers.send(); 
+    elmers.send();
   }
 
 }

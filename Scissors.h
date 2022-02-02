@@ -43,8 +43,8 @@ public:
    void sendText(String);
 
 	// parse functions
-	int    update    ( );
-	int    update    ( String );
+	int    listen    ( );
+	int    parse   ( String );
 	int errorCheck();
 
 	int    getInt    ( int );
