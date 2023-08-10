@@ -24,7 +24,7 @@
 #include <Scissors.h>
 
 Scissors cut;
-int ledPin = 5;
+int ledPin = 13;
 
 int on = 0;
 int off = 0;
@@ -45,7 +45,7 @@ void setup() {
 }
 
 void loop() {
-
+  
   if (cut.listen() > 0) { // have a new message?
 
         // get the values

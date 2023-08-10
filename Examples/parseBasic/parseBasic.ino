@@ -2,14 +2,17 @@
 // Scissors v0.02
 // Scissors Example:  LED_blink_noSTREAM
 
-// mouseBlink uses Scissors to parse strings originating
+// LED_blink_noSTREAM uses Scissors to parse strings originating
 // outside serial streams (eg MQTT libraries)
+
+// this example demonstrated passing a string into 
+// the parse function directly
 
 // default message structure
 // start     = '*'
 // end       = '#'
 // delimeter = ','
-// mesage strcuture :: *data0,data1#
+// message strcuture :: *data0,data1#
 
 // can parse up to 8 data tokens -- may get slower at that level (YMMV)
 
@@ -26,7 +29,7 @@
 Scissors cut;
 
 // led controls
-int ledPin = 5;
+int ledPin = 13;
 int on = 0;
 int off = 0;
 
@@ -36,12 +39,12 @@ int LAST_STATE = 0;
 unsigned long timeNow;
 unsigned long startTime;
 
-// string to parse
+// string to parse - can come from monitor following this format.
 String s = ("*1000,500#"); // on time , off time -- feel free to change it
 
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(9600); // start serial but do not connect it to scissors
   cut.begin();
   pinMode(ledPin,OUTPUT);
 }
@@ -56,7 +59,7 @@ void loop() {
 }
 
 // uses a timer so that we can update the times during each phase
-// try with delay to see why.
+// try with delay (below) to see why.
 
 void blink (int onTime, int offTime) {
 
@@ -74,7 +77,7 @@ void blink (int onTime, int offTime) {
     Serial.println("offTime set to zero");
   }
 
-  // timer checks one for each LED state
+  // timers -- one for each LED state
   if ( LED_STATE == HIGH) {
     if ( timeNow - startTime > onTime){
       LED_STATE = LOW;
@@ -91,7 +94,8 @@ void blink (int onTime, int offTime) {
 
 // ***************  DELAY SOLUTION
 // BLOCKING!  If we set the blink phases to long durations
-// we canpt update the inputs.
+// we cannot update the inputs in real time.
+
 // Uncomment if you want to see it in action.
 //
 //       digitalWrite(ledPin,HIGH);

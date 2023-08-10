@@ -1,22 +1,30 @@
-Scissors       KEYWORD1
+Scissors	KEYWORD1
 
-begin	        KEYWORD2
-update	        KEYWORD2
+begin	KEYWORD2
+parse   KEYWORD2
+listen  KEYWORD2
+poll    KEYWORD2
 
-getInt	        KEYWORD2
-getFloat	KEYWORD2
+getMessageLength    KEYWORD2
+getTokenCount   KEYWORD2
+
+getInt  KEYWORD2
+getFloat    KEYWORD2
 getString	KEYWORD2
 getRaw   	KEYWORD2
 
 
 setStartByte	KEYWORD2
-setEndByte  	KEYWORD2
-setDelimiter	KEYWORD2
+setEndByte      KEYWORD2
+setDelimiter    KEYWORD2
 setMaxElements	KEYWORD2
 
 getStartByte	KEYWORD2
 getEndByte  	KEYWORD2
 getDelimiter	KEYWORD2
 getMaxElements	KEYWORD2
+getBaud KEYWORD2
+
+setDebug    KEYWORD2
 
 

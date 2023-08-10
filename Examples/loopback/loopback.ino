@@ -43,6 +43,7 @@ void loop() {
     Serial.println();
 
     // repackage with glue
+    // note flip order of variables to know we changed it
     Serial.println("Glue repackaged to :: ");
     elmers.create();
     elmers.add(s);
