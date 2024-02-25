@@ -1,5 +1,5 @@
-// listener basic
-// manually check for messagea and parse. 
+// Scissors Example:  listener basic
+// manually check for message and parse. 
 
 //https://github.com/hex705/Scissors
 

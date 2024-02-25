@@ -1,5 +1,3 @@
-
-// Scissors v0.02
 // Scissors Example:  mouseBlink
 
 // mouseBlink uses Scissors to parse strings originating
